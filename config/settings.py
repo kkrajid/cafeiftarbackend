@@ -175,7 +175,7 @@ SIMPLE_JWT = {
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://localhost:3000'
+    default='http://localhost:5173,http://localhost:3000,https://cafeiftar.com,https://www.cafeiftar.com'
 ).split(',')
 
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=True, cast=bool)
@@ -184,7 +184,7 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF Trusted Origins (required for Railway)
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='https://cafeiftarbackend-production.up.railway.app,https://*.railway.app'
+    default='https://cafeiftarbackend-production.up.railway.app,https://*.railway.app,https://cafeiftar.com,https://www.cafeiftar.com'
 ).split(',')
 
 # Email Configuration
