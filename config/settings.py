@@ -5,9 +5,7 @@ Django settings for Cafe Iftar backend project.
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-import os
 import dj_database_url
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,12 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-cafe-iftar-dev-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = config('DEBUG', default=True, cast=bool)
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-
-# ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
-ALLOWED_HOSTS =['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.railway.app').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -92,21 +87,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'PORT': config('DATABASE_PORT', default='5432'),
 #     }
 # }
-# DATABASES = {
-#     #SQLITE
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=not DEBUG,   # good for production
-    )
-}
+# Database configuration - Uses DATABASE_URL for Railway, SQLite for local dev
+DATABASE_URL = config('DATABASE_URL', default=None)
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
@@ -142,8 +135,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 
 # Media files
 MEDIA_URL = 'media/'
